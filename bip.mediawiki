@@ -1,0 +1,249 @@
+<pre>
+  BIP: ?
+  Layer: Applications
+  Title: The Protocol of digital artifacts on dogecoin
+  Author: todcnst1453 <todcnst1453@gmail.com>
+  Status: Draft
+  Type: Informational
+  Created: 2023-05-08
+  License: PD
+</pre>
+
+== Introduction ==
+
+Dogecoin has no notion of stable, public accounts or identities. Addresses are
+single-use, and wallet accounts are private. Additionally, the use of addresses
+or public keys as stable identifiers precludes transfer of ownership or key
+rotation. However, the digital artifacts need individual identities and allowing 
+them to be tracked, transferred, and imbued with meaning. 
+
+== Cardinals ==
+
+The smallest indivisible unit in Dogecoin is defined as elon. One doge is equivalent to 100,000,000 elons.
+Every elon is serially numbered, starting at 0, in the order in which it is
+mined. These numbers are termed "cardinal numbers", or "cardinals", as they are
+cardinal numbers in the mathematical sense, giving the order of each elon in the
+totally supply. 
+
+The cardinal numbers of elons in transaction inputs are transferred to output
+elons in first-in-first-out order, according to the size and order of the
+transactions inputs and outputs.
+
+If a transaction is mined with the same transaction ID as outputs currently in
+the UTXO set,  the new transaction outputs displace the older UTXO set entries, 
+destroying the elons contained in any unspent outputs of the first transaction. 
+
+For the purposes of the assignment algorithm, the coinbase transaction is
+considered to have an implicit input equal in size to the subsidy, followed by
+an input for every fee-paying transaction in the block, in the order that those
+transactions appear in the block. The implicit subsidy input carries the
+block's newly created elons. The implicit fee inputs carry the elons that were
+paid as fees in the block's transactions.
+
+Underpaying the subsidy does not change the ordinal numbers of elons mined
+in subsequent blocks. Ordinals depend only on how many elons could have been
+mined, not how many actually were.
+
+Elons are numbered and transferred with the following algorithm:
+
+<pre>
+# subsidy of block at given height
+const COIN = 100_000_000
+def subsidy(height):
+    if (height < 100000) {
+        return 1000000 * COIN;
+    } else if (height < 145000) {
+        return 500000 * COIN;
+    } else if (height < 200000) {
+        return 250000 * COIN;
+    } else if (height < 300000) {
+        return 125000 * COIN;
+    } else if (height < 400000) {
+        return  62500 * COIN;
+    } else if (height < 500000) {
+        return  31250 * COIN;
+    } else if (height < 600000) {
+        return  15625 * COIN;
+    } else {
+        return  10000 * COIN;
+    }
+
+
+# first cardinal of subsidy of block at given height
+def first_cardinal(height):
+  start = 0
+  for height in range(height):
+    start += subsidy(height)
+  return start
+
+# assign cardinals in given block
+def assign_cardinals(block):
+  first = first_cardinal(block.height)
+  last = first + subsidy(block.height)
+  coinbase_cardinals = list(range(first, last))
+
+  for transaction in block.transactions[1:]:
+    cardinals = []
+    for input in transaction.inputs:
+      cardinals.extend(input.cardinals)
+
+    for output in transaction.outputs:
+      output.cardinals = cardinals[:output.value]
+      del cardinals[:output.value]
+
+    coinbase_cardinals.extend(cardinals)
+
+  for output in block.transaction[0].outputs:
+    output.cardinals = coinbase_cardinals[:output.value]
+    del coinbase_cardinals[:output.value]
+</pre>
+
+Cardinal numbers are designed to be orthogonal to other aspects of the Bitcoin
+protocol, and can thus be used in conjunction with other layer one and layer
+applications, even ones that were not designed with cardinal numbers in mind.
+
+Cardinal elons can be secured using current and future script types. They can be
+held by single-signature wallets, multi-signature wallets, time-locked, and
+height-locked in all the usual ways.
+
+By assigning cardinal numbers to all elons without the need for an explicit
+creation step, the anonymity set of cardinal number users is maximized.
+
+Since a elon has an output that contains it, and an output has a public key that
+controls it, the owner of a elon can respond to challenges by signing messages
+using the address associated with the controlling UTXO. Additionally, a elon can
+change hands, or its private key can be rotated without a change of ownership,
+by transferring it to a new output.
+
+Cardinal require no changes to blocks, transactions, or network protocols, and
+can thus be immediately adopted, or ignored, without impacting existing users.
+
+== Digital Artifacts ==
+
+Inscriptions inscribe elons with arbitrary content, creating dogecoin-native digital artifacts, more commonly known as NFTs. Inscriptions do not require a sidechain or separate token.
+
+These inscribed elons can then be transferred using dogecoin transactions, sent to dogecoin addresses, and held in dogecoin UTXOs. These transactions, addresses, and UTXOs are normal dogecoin transactions, addresses, and UTXOS in all respects, with the exception that in order to send individual elons, transactions must control the order and value of inputs and outputs according to cardinal theory.
+
+The inscription content model is that of the web. An inscription consists of a content type, also known as a MIME type, and the content itself, which is a byte string. This allows inscription content to be returned from a web server, and for creating HTML inscriptions that use and remix the content of other inscriptions.
+
+Inscription content is entirely on-chain, stored in taproot script-path spend scripts. Taproot scripts have very few restrictions on their content, and additionally receive the witness discount, making inscription content storage relatively economical.
+
+Since taproot script spends can only be made from existing taproot outputs, inscriptions are made using a two-phase commit/reveal procedure. First, in the commit transaction, a taproot output committing to a script containing the inscription content is created. Second, in the reveal transaction, the output created by the commit transaction is spent, revealing the inscription content on-chain.
+
+Inscription content is serialized using data pushes within unexecuted conditionals, called "envelopes". Envelopes consist of an OP_FALSE OP_IF … OP_ENDIF wrapping any number of data pushes. Because envelopes are effectively no-ops, they do not change the semantics of the script in which they are included, and can be combined with any other locking script.
+
+A text inscription containing the string "Hello, world!" is serialized as follows:
+
+<pre>
+OP_FALSE
+OP_IF
+  OP_PUSH "ord"
+  OP_1
+  OP_PUSH "text/plain;charset=utf-8"
+  OP_0
+  OP_PUSH "Hello, world!"
+OP_ENDIF
+
+</pre>
+
+== DRC-20 ==
+
+Cardinal theory can facilitate fungibility on dogecoin
+
+<pre>
+ Create a drc-20 with the deploy function
+ Mint an amount of drc-20's with the mint function
+ Transfer an amount of drc-20's with the transfer function. 
+</pre>
+
+=== Deploy drc-20 ===
+
+Inscribe the deploy function to you ordinal compatible wallet with the desired drc-20 parameters set.
+It's a example of deploy script as following:
+<pre>
+{ 
+  "p": "drc-20",
+  "op": "deploy",
+  "tick": "dogewow",
+  "max": "1000000",
+  "lim": "100"
+}
+</pre>
+
+{| class="wikitable" style="margin:auto"
+|+ command parameter description 
+|-
+! Key !! Require !! Description
+|-
+| p || yes || Protocol: Helps other systems identify and process drc-20 events
+|-
+| op || yes || Operation: Type of event (Deploy, Mint, Transfer)
+|-
+| tick || yes || Ticker: letter identifier of the drc-20, less or equal to 8 charaters
+|-
+| max || yes || Max supply: set max supply of the drc-20
+|-
+| lim || no || Mint limit: If letting users mint to themsleves, limit per cardinal
+|-
+| dec || no || Decimals: set decimal precision, default to 18
+|-
+| burn || no || burn some token 
+|-
+| func || no || specific rules such as mining rules, rewards rules ...
+|}
+
+=== Mint drc-20 ===
+
+Inscribe the mint function to your cardinal compatible wallet. Make sure the ticker matches either a) the drc-20 you deployed in step 1, or b) any drc-20 that has yet to reach its fully diluted supply. Also if the drc-20 has a mint limit, make sure not to surpass this.
+
+It's a example of mint script as following:
+<pre>
+{ 
+  "p": "drc-20",
+  "op": "mint",
+  "tick": "dogewow",
+  "amt": "100"
+}
+</pre>
+
+{| class="wikitable" style="margin:auto"
+|+ command parameter description 
+|-
+! Key !! Require !! Description
+|-
+| p || yes || Protocol: Helps other systems identify and process drc-20 events
+|-
+| op || yes || Operation: Type of event (Deploy, Mint, Transfer)
+|-
+| tick || yes || Ticker: letter identifier of the drc-20, less or equal to 8 charaters
+|-
+| amt || yes || Amount to mint: States the amount of the drc-20 to mint. Has to be less than "lim" above if stated
+|}
+
+=== Transfer drc-20 ===
+
+Inscribe the transfer function to your ordinal compatible wallet. Make sure the transfer function inscription information is valid before inscribing 
+
+It's a example of transfer script as following:
+<pre>
+{ 
+  "p": "drc-20",
+  "op": "transfer",
+  "tick": "dogewow",
+  "amt": "230"
+}
+</pre>
+
+{| class="wikitable" style="margin:auto"
+|+ command parameter description 
+|-
+! Key !! Require !! Description
+|-
+| p || yes || Protocol: Helps other systems identify and process drc-20 events
+|-
+| op || yes || Operation: Type of event (Deploy, Mint, Transfer)
+|-
+| tick || yes || Ticker: letter identifier of the drc-20, less or equal to 8 charaters
+|-
+| amt || yes || Amount to transfer: States the amount of the drc-20 to transfer.
+|}
