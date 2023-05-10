@@ -179,7 +179,7 @@ It's a example of deploy script as following:
 |-
 | op || yes || Operation: Type of event (Deploy, Mint, Transfer)
 |-
-| tick || yes || Ticker: letter identifier of the drc-20, less or equal to 8 charaters
+| tick || yes || Ticker: letter identifier of the drc-20, less or equal to 4 characters
 |-
 | max || yes || Max supply: set max supply of the drc-20
 |-
@@ -215,7 +215,7 @@ It's a example of mint script as following:
 |-
 | op || yes || Operation: Type of event (Deploy, Mint, Transfer)
 |-
-| tick || yes || Ticker: letter identifier of the drc-20, less or equal to 8 charaters
+| tick || yes || Ticker: letter identifier of the drc-20, less or equal to 4 characters
 |-
 | amt || yes || Amount to mint: States the amount of the drc-20 to mint. Has to be less than "lim" above if stated
 |}
@@ -243,7 +243,7 @@ It's a example of transfer script as following:
 |-
 | op || yes || Operation: Type of event (Deploy, Mint, Transfer)
 |-
-| tick || yes || Ticker: letter identifier of the drc-20, less or equal to 8 charaters
+| tick || yes || Ticker: letter identifier of the drc-20, less or equal to 4 characters
 |-
 | amt || yes || Amount to transfer: States the amount of the drc-20 to transfer.
 |}
