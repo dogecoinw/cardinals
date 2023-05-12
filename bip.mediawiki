@@ -2,7 +2,7 @@
   BIP: ?
   Layer: Applications
   Title: The Protocol of digital artifacts on dogecoin
-  Author: todcnst1453 <todcnst1453@gmail.com>
+  Author: dao@dogewow.club
   Status: Draft
   Type: Informational
   Created: 2023-05-08
