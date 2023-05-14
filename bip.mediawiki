@@ -44,16 +44,24 @@ Underpaying the subsidy does not change the ordinal numbers of elons mined
 in subsequent blocks. Ordinals depend only on how many elons could have been
 mined, not how many actually were.
 
+Originally, a different payout scheme was envisioned with block rewards being
+determined by taking the maximum reward as per the block schedule and applying
+the result of a Mersenne Twister pseudo-random number generator to arrive at a
+number between 0 and the maximum reward.The cardinals dropped this part of elons.
+
+This was changed starting with block 145,000, to prevent large pools from gaming
+the system and mining only high reward blocks. At the same time, the difficulty
+retargeting was also changed from four hours to once per block (every minute).
+The cardinals numbered at the block 145,000.
+
 Elons are numbered and transferred with the following algorithm:
 
 <pre>
 # subsidy of block at given height
 const COIN = 100_000_000
 def subsidy(height):
-    if (height < 100000) {
-        return 1000000 * COIN;
-    } else if (height < 145000) {
-        return 500000 * COIN;
+    if (height < 145000) {
+        return -1
     } else if (height < 200000) {
         return 250000 * COIN;
     } else if (height < 300000) {
@@ -71,6 +79,8 @@ def subsidy(height):
 
 # first cardinal of subsidy of block at given height
 def first_cardinal(height):
+  if (height < 145000)
+    return -1
   start = 0
   for height in range(height):
     start += subsidy(height)
@@ -78,6 +88,8 @@ def first_cardinal(height):
 
 # assign cardinals in given block
 def assign_cardinals(block):
+  if (block.height < 145000)
+    return -1
   first = first_cardinal(block.height)
   last = first + subsidy(block.height)
   coinbase_cardinals = list(range(first, last))
