@@ -60,8 +60,10 @@ Elons are numbered and transferred with the following algorithm:
 # subsidy of block at given height
 const COIN = 100_000_000
 def subsidy(height):
-    if (height < 145000) {
-        return -1
+    if (height < 100000) {
+        return 1000000 * COIN;
+    } else if (height < 150000) {
+        return 500000 * COIN;
     } else if (height < 200000) {
         return 250000 * COIN;
     } else if (height < 300000) {
@@ -151,6 +153,47 @@ Protocol:     "ord"
 Content type: "text/plain;charset=utf-8"
 Content:      "Hello, world!"
 </pre>
+
+An image inscription is serialized as follows:
+
+<pre>
+Protocol:     "ord"
+Content type: "image/gif"
+Content:      <gif file data>
+</pre>
+
+A video recording inscription is serialized as follows:
+
+<pre>
+Protocol:     "ord"
+Content type: "video/mp4"
+Content:      <mp4 file data>
+</pre>
+
+A sound recording inscription is serialized as follows:
+
+<pre>
+Protocol:     "ord"
+Content type: "audio/flac"
+Content:      <flac file data>
+</pre>
+
+You can inscription a ipfs link as follows:
+
+<pre>
+Protocol:     "ord"
+Content type: "application/ipfs"
+Content:      <the ipfs cid>
+</pre>
+
+You can register a elon name service as follows:
+
+<pre>
+Protocol:     "ord"
+Content type: "application/elns"
+Content:      "{"p":"elns","op":"reg","name":"example.elons"}"
+</pre>
+
 
 == DRC-20 ==
 
