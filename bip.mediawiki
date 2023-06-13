@@ -147,11 +147,9 @@ Inscription content is serialized using data pushes within unexecuted conditiona
 A text inscription containing the string "Hello, world!" is serialized as follows:
 
 <pre>
-
-Protocol: "ord"
+Protocol:     "ord"
 Content type: "text/plain;charset=utf-8"
-Content: "Hello, world!"
-
+Content:      "Hello, world!"
 </pre>
 
 == DRC-20 ==
