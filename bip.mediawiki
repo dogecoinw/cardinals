@@ -47,12 +47,13 @@ mined, not how many actually were.
 Originally, a different payout scheme was envisioned with block rewards being
 determined by taking the maximum reward as per the block schedule and applying
 the result of a Mersenne Twister pseudo-random number generator to arrive at a
-number between 0 and the maximum reward.The cardinals dropped this part of elons.
+number between 0 and the maximum reward.The cardinals has to take the maximun reward
+in this part of elons.
 
 This was changed starting with block 145,000, to prevent large pools from gaming
 the system and mining only high reward blocks. At the same time, the difficulty
 retargeting was also changed from four hours to once per block (every minute).
-The cardinals numbered at the block 145,000.
+The cardinals numbered from the block 145,000 match the actual.
 
 Elons are numbered and transferred with the following algorithm:
 
@@ -62,7 +63,7 @@ const COIN = 100_000_000
 def subsidy(height):
     if (height < 100000) {
         return 1000000 * COIN;
-    } else if (height < 150000) {
+    } else if (height < 145000) {
         return 500000 * COIN;
     } else if (height < 200000) {
         return 250000 * COIN;
