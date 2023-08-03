@@ -332,3 +332,63 @@ It's a example of create script as following:
 |-
 | addr || no || get reward of the pairs operation
 |}
+
+
+=== Add or remove the liquidity of pairs ===
+The user can add or remove the liquidity of pairs, and the liquidity of pairs provide the price. 
+Every add or remove operation inscribe inscriptions to the dogecoin chain.
+It's a example of create script as following:
+<pre>
+{ 
+  "p": "pair-v1",
+  "op": "add",
+  "tick": "wow","doge",
+  "amt": "1000000", "1000",
+  "addr": "Dxxxxxxxx"
+}
+</pre>
+
+
+{| class="wikitable" style="margin:auto"
+|+ command parameter description 
+|-
+! Key !! Require !! Description
+|-
+| p || yes || Protocol: Helps other systems identify and process drc-20 events
+|-
+| op || yes || Operation: Type of event (create, add, remove, swap)
+|-
+| tick || yes || Ticker: letter identifier of the two drc-20
+|-
+| amt || yes || Amount: the amount of add or remove drc-20
+|-
+| addr || no || add liquidity operation get reward of the pairs operation
+|}
+
+=== Swap the liquidity of pairs ===
+Any user can swap one drc-20 for another drc-20 using the drc-20 pairs.
+Every swap operation inscribe inscriptions to the dogecoin chain.
+It's a example of create script as following:
+<pre>
+{ 
+  "p": "pair-v1",
+  "op": "swap",
+  "tick": "wow","doge",
+  "amt": "10", "1",
+}
+</pre>
+
+
+{| class="wikitable" style="margin:auto"
+|+ command parameter description 
+|-
+! Key !! Require !! Description
+|-
+| p || yes || Protocol: Helps other systems identify and process drc-20 events
+|-
+| op || yes || Operation: Type of event (create, add, remove, swap)
+|-
+| tick || yes || Ticker: letter identifier of the two drc-20, user transfer from first drc-20 for second drc-20
+|-
+| amt || yes || Amount: the amount of swap drc-20, the user balance remove the first one of first drc-20 and get the second one of second drc-20
+|}
