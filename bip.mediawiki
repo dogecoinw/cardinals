@@ -297,3 +297,38 @@ It's a example of transfer script as following:
 |-
 | amt || yes || Amount to transfer: States the amount of the drc-20 to transfer.
 |}
+
+== DRC-DEX (drafr plan) ==
+Exchange drc-20 using inscriptions. 
+
+<pre>
+ Create a drc-20 swap pairs
+ Add and remove the liquidity of swap pairs
+ Swap the drc-20 according swap pairs state
+</pre>
+
+=== Create drc20-paris ===
+Inscribe the drc20-paris function to you ordinal compatible wallet with the desired drc-20 parameters set.
+It's a example of create script as following:
+<pre>
+{ 
+  "p": "pair-v1",
+  "op": "create",
+  "tick": "wow","doge",
+  "addr": "Dxxxxxxxx"
+}
+</pre>
+
+{| class="wikitable" style="margin:auto"
+|+ command parameter description 
+|-
+! Key !! Require !! Description
+|-
+| p || yes || Protocol: Helps other systems identify and process drc-20 events
+|-
+| op || yes || Operation: Type of event (create, add, remove, swap)
+|-
+| tick || yes || Ticker: letter identifier of the two drc-20
+|-
+| addr || no || get reward of the pairs operation
+|}
