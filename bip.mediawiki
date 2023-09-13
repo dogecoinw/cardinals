@@ -314,7 +314,8 @@ It's a example of create script as following:
 { 
   "p": "pair-v1",
   "op": "create",
-  "tick": "wow","doge",
+  "tick0": "wow",
+  "tick1": "doge",
   "addr": "Dxxxxxxxx"
 }
 </pre>
@@ -342,8 +343,10 @@ It's a example of create script as following:
 { 
   "p": "pair-v1",
   "op": "add",
-  "tick": "wow","doge",
-  "amt": "1000000", "1000",
+  "tick0": "wow",
+  "tick1": "doge",
+  "amt0": "1000000", 
+  "amt1": "1000",
   "addr": "Dxxxxxxxx"
 }
 </pre>
@@ -373,8 +376,10 @@ It's a example of create script as following:
 { 
   "p": "pair-v1",
   "op": "swap",
-  "tick": "wow","doge",
-  "amt": "10", "1",
+  "tick0": "wow",
+  "tick1": "doge",
+  "amt0": "10", 
+  "amt1": "1",
 }
 </pre>
 
