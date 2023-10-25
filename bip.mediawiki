@@ -338,7 +338,7 @@ It's a example of create script as following:
 === Add or remove the liquidity of pairs ===
 The user can add or remove the liquidity of pairs, and the liquidity of pairs provide the price. 
 Every add or remove operation inscribe inscriptions to the dogecoin chain.
-It's a example of create script as following:
+It's a example of add script as following:
 <pre>
 { 
   "p": "pair-v1",
@@ -351,6 +351,17 @@ It's a example of create script as following:
 }
 </pre>
 
+It's a example of remove script as following:
+<pre>
+{ 
+  "p": "pair-v1",
+  "op": "remove",
+  "tick0": "wow",
+  "tick1": "doge",
+  "amt": "1000000", 
+  "addr": "Dxxxxxxxx"
+}
+</pre>
 
 {| class="wikitable" style="margin:auto"
 |+ command parameter description 
@@ -365,7 +376,7 @@ It's a example of create script as following:
 |-
 | amt || yes || Amount: the amount of add or remove drc-20
 |-
-| addr || no || add liquidity operation get reward of the pairs operation
+| addr || optional || add liquidity operation get reward of the pairs operation
 |}
 
 === Swap the liquidity of pairs ===
