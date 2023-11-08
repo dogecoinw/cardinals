@@ -389,7 +389,7 @@ It's a example of remove script as following:
 It's the pseudocode of algorithm of remove operation:
 
 <pre>
-fn burn(liq, res0, res1, total_liquidity) {
+fn remove_liquidity(liq, res0, res1, total_liquidity) {
   let amt0 = liquidity.mul(res0) / total_liquidity 
   let amt1 = liquidity.mul(res1) / total_liquidity
   if res0 > amt0 && res1 > amt1 {
