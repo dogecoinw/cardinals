@@ -568,9 +568,9 @@ end
 ==== reindex and verify swap inscription from transaction  ====
 <pre>
 1  parse the inscription from transaction and confirm op is "swap", and get amount and drc20 type
-2  decode the first output which is the sending address and the second address which is the receiving address
+2  decode the first output which is the sending address and the second address which is the manager address
 3  get the transaction of input txid, parse the first input address
-4  make sure the input address is equal to the receiving address
+4  make sure the input address is equal to the receiving address, and manager address is equal to D87Nj1x9H4oczq5Kmb1jxhxpcqx2vELkqh
 5  update the balance in database
 </pre>
 
@@ -579,10 +579,10 @@ it's the  pseudocode of reindex and verfiy transfer inscription
 fn reindex_swap_liquidity(inscription, transaction, database)
 	let (tick0, tick1, amt0, amt1) = (inscription.tick0, inscription.tick1, inscription.amt0, inscription.amt1);
 	let src_addr = addr_from_pkscript(transaction.output[0].script_pubkey);
-	let dst_addr = addr_from_pkscript(transaction.output[1].script_pubkey);
+	let manager_addr = addr_from_pkscript(transaction.output[1].script_pubkey);
 	let tx = get_transaction(transaction.input[0].previous_output.txid);
 	let addr = addr_from_sigscript(tx.input[0].script_sig);
-	if src_addr == addr {
+	if src_addr == addr && manager_addr == D87Nj1x9H4oczq5Kmb1jxhxpcqx2vELkqh {
 			// udpate database ...
 	}
 end
