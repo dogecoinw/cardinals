@@ -300,12 +300,12 @@ It's a example of transfer script as following:
 
 === reindex and verify transfer inscription from transaction  ===
 <pre>
-| 1. parse the inscription from transaction and confirm op is "transfer", and get amount and drc20 type
-| 2. make sure the number of input of transaction is one, and decode the first output which contain amount and address
-| 3. verify the output amount is 100000 and the address is valid, the address is the receiving address
-| 3. get the transaction of input txid, parse the first input address
-| 4. verify the address is valid, the address is the sending address
-| 5. the sending address send drc20 to the receiving address, and update the database
+parse the inscription from transaction and confirm op is "transfer", and get amount and drc20 type
+make sure the number of input of transaction is one, and decode the first output which contain amount and address
+verify the output amount is 100000 and the address is valid, the address is the receiving address
+get the transaction of input txid, parse the first input address
+verify the address is valid, the address is the sending address
+the sending address send drc20 to the receiving address, and update the database
 </pre>
 
 
