@@ -308,6 +308,23 @@ It's a example of transfer script as following:
 6  the sending address send drc20 to the receiving address, and update the database
 </pre>
 
+it's the  pseudocode of reindex and verfiy transfer inscription
+<pre>
+fn reindex_transfer(inscription, transaction, database)
+	let amount = inscription.amount;
+	let drc20 = inscription.type;
+    	let input_num = tx.input.len();
+    
+	if input_num == 1 {
+		let dst_addr = addr_from_pkscript(transaction.output[0].script_pubkey);
+		let tx = get_transaction(transaction.input[0].previous_output.txid);
+		let src_addr = addr_from_sigscript(tx.input[0].script_sig);
+		let drc_database = database.get(drc20);
+		drc_database[src_addr] = drc_database[src_addr] - amount;
+		drc_database[dst_addr] = drc_database[dst_addr] + amount;
+	}
+end
+</pre>
 
 == DRC-DEX (draft plan) ==
 Exchange drc-20 using inscriptions. 
