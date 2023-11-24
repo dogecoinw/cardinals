@@ -270,6 +270,31 @@ It's a example of mint script as following:
 | amt || yes || Amount to mint: States the amount of the drc-20 to mint. Has to be less than "lim" above if stated
 |}
 
+==== reindex and verify transfer mint from transaction  ====
+<pre>
+1  parse the inscription from transaction and confirm op is "mint", and get amountand drc20 type
+2  decode the first output address(mint address), and the amount divided by 1000000 and the result is mtimes
+3  decode the second output address(manager address), and the amount is greater than the 500000000 x mtimes
+4  the manager address is equal to D92uJjQ9eHUcv2GjJUgp6m58V8wYvGV2g9
+5  get the transaction of input txid, parse the first input address
+6  the input address is equal to mint address, and update the database
+</pre>
+
+it's the  pseudocode of reindex and verfiy transfer inscription
+<pre>
+fn reindex_mint(inscription, transaction, database)
+	let mint_addr = addr_from_pkscript(transaction.output[0].script_pubkey);
+	let mtimes = transaction.output[0]/1000000;
+	let manager_addr = addr_from_pkscript(transaction.output[1].script_pubkey);
+	let fee_amt = transaction.output[1].value;
+	let tx = get_transaction(transaction.input[0].previous_output.txid);
+	let addr = addr_from_sigscript(tx.input[0].script_sig);
+	
+	if mint_addr == addr && manager_addr == D92uJjQ9eHUcv2GjJUgp6m58V8wYvGV2g9 && fee_amt > mtimes * 50000000 {
+		// update database
+	}
+end
+</pre>
 === Transfer drc-20 ===
 
 Inscribe the transfer function to your ordinal compatible wallet. Make sure the transfer function inscription information is valid before inscribing 
@@ -298,7 +323,7 @@ It's a example of transfer script as following:
 | amt || yes || Amount to transfer: States the amount of the drc-20 to transfer.
 |}
 
-=== reindex and verify transfer inscription from transaction  ===
+==== reindex and verify transfer inscription from transaction  ====
 <pre>
 1  parse the inscription from transaction and confirm op is "transfer", and get amount and drc20 type
 2  make sure the number of input of transaction is one, and decode the first output which contain amount and address
@@ -313,15 +338,20 @@ it's the  pseudocode of reindex and verfiy transfer inscription
 fn reindex_transfer(inscription, transaction, database)
 	let amount = inscription.amount;
 	let drc20 = inscription.type;
-    	let input_num = tx.input.len();
+	let input_num = tx.input.len();
     
 	if input_num == 1 {
 		let dst_addr = addr_from_pkscript(transaction.output[0].script_pubkey);
-		let tx = get_transaction(transaction.input[0].previous_output.txid);
-		let src_addr = addr_from_sigscript(tx.input[0].script_sig);
-		let drc_database = database.get(drc20);
-		drc_database[src_addr] = drc_database[src_addr] - amount;
-		drc_database[dst_addr] = drc_database[dst_addr] + amount;
+		let value = transaction.output[0].value;
+		let manager_addr = addr_from_pkscript(transaction.output[0].script_pubkey);
+		if value == 1000000 && manager_addr == D92uJjQ9eHUcv2GjJUgp6m58V8wYvGV2g9 {
+			let tx = get_transaction(transaction.input[0].previous_output.txid);
+			let src_addr = addr_from_sigscript(tx.input[0].script_sig);
+			let drc_database = database.get(drc20);
+			drc_database[src_addr] = drc_database[src_addr] - amount;
+			drc_database[dst_addr] = drc_database[dst_addr] + amount;
+		}
+		
 	}
 end
 </pre>
@@ -402,6 +432,33 @@ fn add_liquidity(amt0, amt1, res0, res1, total_liquidity)
 end
 </pre>
 
+==== reindex and verify add liquidity inscription from transaction  ====
+<pre>
+1  parse the inscription from transaction and confirm op is "add", and get amount and drc20 type
+2  decode the first output which is the add liquidity address and the second address which is the manager address
+3  make sure the manager address is equal to D92uJjQ9eHUcv2GjJUgp6m58V8wYvGV2g9, and amount is 1000000
+3  get the transaction of input txid, parse the first input address
+4  make sure the input address is equal to the add liquidity address
+5  update the liquidity in database
+</pre>
+
+it's the  pseudocode of reindex and verfiy transfer inscription
+<pre>
+fn reindex_add_liquidity(inscription, transaction, database)
+	let (tick0, tick1, amt0, amt1) = (inscription.tick0, inscription.tick1, inscription.amt0, inscription.amt1);
+	let addr = addr_from_pkscript(transaction.output[0].script_pubkey);
+	let manager_addr = addr_from_pkscript(transaction.output[1].script_pubkey);
+    	if manager_addr == D92uJjQ9eHUcv2GjJUgp6m58V8wYvGV2g9 && transaction.output[1].value == 1000000 {
+		let tx = get_transaction(transaction.input[0].previous_output.txid);
+		let src_addr = addr_from_sigscript(tx.input[0].script_sig);
+		if src_addr == addr {
+			// udpate database ...
+		}
+	}
+	
+end
+</pre>
+
 It's a example of remove script as following:
 <pre>
 { 
@@ -430,6 +487,33 @@ fn remove_liquidity(liq, res0, res1, total_liquidity) {
   }
 	
 }
+</pre>
+
+==== reindex and verify remove liquidity inscription from transaction  ====
+<pre>
+1  parse the inscription from transaction and confirm op is "remove", and get amount and drc20 type
+2  decode the first output which is the add liquidity address and the second address which is the manager address
+3  make sure the manager address is equal to D92uJjQ9eHUcv2GjJUgp6m58V8wYvGV2g9, and amount is 1000000
+4  get the transaction of input txid, parse the first input address
+5  make sure the input address is equal to the add liquidity address
+6  update the liquidity in database
+</pre>
+
+it's the  pseudocode of reindex and verfiy transfer inscription
+<pre>
+fn reindex_remove_liquidity(inscription, transaction, database)
+	let (tick0, tick1, amt0, amt1) = (inscription.tick0, inscription.tick1, inscription.amt0, inscription.amt1);
+	let addr = addr_from_pkscript(transaction.output[0].script_pubkey);
+	let manager_addr = addr_from_pkscript(transaction.output[1].script_pubkey);
+    	if manager_addr == D92uJjQ9eHUcv2GjJUgp6m58V8wYvGV2g9 && transaction.output[1].value == 1000000 {
+		let tx = get_transaction(transaction.input[0].previous_output.txid);
+		let src_addr = addr_from_sigscript(tx.input[0].script_sig);
+		if src_addr == addr {
+			// udpate database ...
+		}
+	}
+	
+end
 </pre>
 
 {| class="wikitable" style="margin:auto"
@@ -478,6 +562,29 @@ fn swap(amt_in, res0, res1) {
     return None
   }
 }
+end
+</pre>
+
+==== reindex and verify swap inscription from transaction  ====
+<pre>
+1  parse the inscription from transaction and confirm op is "swap", and get amount and drc20 type
+2  decode the first output which is the sending address and the second address which is the receiving address
+3  get the transaction of input txid, parse the first input address
+4  make sure the input address is equal to the receiving address
+5  update the balance in database
+</pre>
+
+it's the  pseudocode of reindex and verfiy transfer inscription
+<pre>
+fn reindex_swap_liquidity(inscription, transaction, database)
+	let (tick0, tick1, amt0, amt1) = (inscription.tick0, inscription.tick1, inscription.amt0, inscription.amt1);
+	let src_addr = addr_from_pkscript(transaction.output[0].script_pubkey);
+	let dst_addr = addr_from_pkscript(transaction.output[1].script_pubkey);
+	let tx = get_transaction(transaction.input[0].previous_output.txid);
+	let addr = addr_from_sigscript(tx.input[0].script_sig);
+	if src_addr == addr {
+			// udpate database ...
+	}
 end
 </pre>
 
