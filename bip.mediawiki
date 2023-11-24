@@ -298,6 +298,8 @@ It's a example of transfer script as following:
 | amt || yes || Amount to transfer: States the amount of the drc-20 to transfer.
 |}
 
+= reindex transfer inscription from transaction  =
+
 == DRC-DEX (draft plan) ==
 Exchange drc-20 using inscriptions. 
 
